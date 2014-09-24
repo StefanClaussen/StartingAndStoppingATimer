@@ -9,6 +9,13 @@
 #import "ViewController.h"
 
 @interface ViewController ()
+{
+    NSTimer *timer;
+    int currentMinute;
+    int currentSeconds;
+}
+
+@property (strong, nonatomic) IBOutlet UILabel *countdownLabel;
 
 @end
 
@@ -18,12 +25,55 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    currentMinute = 25;
+    currentSeconds = 00;
+    [self.countdownLabel setText:@"Time : 25:00"];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)startTimer:(UIButton *)sender
+{
+    timer = [NSTimer scheduledTimerWithTimeInterval:(1)
+                                             target: self selector: @selector(timerFired)
+                                           userInfo: nil
+                                            repeats:YES];
+}
+
+- (IBAction)pauseTimer:(UIButton *)sender
+{
+    if (timer != nil) {
+        [timer invalidate];
+        timer = nil;
+    }
+}
+
+
+-(void)timerFired
+{
+    if((currentMinute>0 || currentSeconds>=0) && currentMinute>=0)
+    {
+        if(currentSeconds==0)
+        {
+            currentMinute -= 1;
+            currentSeconds=59;
+        }
+        else if(currentSeconds>0)
+        {
+            currentSeconds -= 1;
+            //[self moveTimerBlock];
+        }
+        if(currentMinute > -1)
+            [self.countdownLabel setText:[NSString stringWithFormat:@"%@%d%@%02d",@"Time : ",currentMinute,@":",currentSeconds]];
+    }
+    else
+    {
+        [timer invalidate];
+    }
 }
 
 @end
