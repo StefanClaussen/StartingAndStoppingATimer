@@ -16,6 +16,7 @@
 }
 
 @property (strong, nonatomic) IBOutlet UILabel *countdownLabel;
+@property (strong, nonatomic) IBOutlet UIButton *startAndPauseButtonLabel;
 
 @end
 
@@ -28,6 +29,7 @@
     currentMinute = 25;
     currentSeconds = 00;
     [self.countdownLabel setText:@"Time : 25:00"];
+    [self.startAndPauseButtonLabel setTitle:@"Play" forState:UIControlStateNormal];
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,7 +38,22 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)startTimer:(UIButton *)sender
+
+- (IBAction)startAndPauseTimer:(UIButton *)sender
+{
+    if ([self.startAndPauseButtonLabel.titleLabel.text isEqualToString:@"Play"])
+    {
+        [self startTimer];
+        [self.startAndPauseButtonLabel setTitle:@"Pause" forState:UIControlStateNormal];
+    }
+    else if ([self.startAndPauseButtonLabel.titleLabel.text isEqualToString:@"Pause"])
+    {
+        [self pauseTimer];
+        [self.startAndPauseButtonLabel setTitle:@"Play" forState:UIControlStateNormal];
+    }
+}
+
+- (void)startTimer
 {
     timer = [NSTimer scheduledTimerWithTimeInterval:(1)
                                              target: self selector: @selector(timerFired)
@@ -44,14 +61,13 @@
                                             repeats:YES];
 }
 
-- (IBAction)pauseTimer:(UIButton *)sender
+- (void)pauseTimer
 {
     if (timer != nil) {
         [timer invalidate];
         timer = nil;
     }
 }
-
 
 -(void)timerFired
 {
