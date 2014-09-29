@@ -13,6 +13,7 @@
     NSTimer *timer;
     int currentMinute;
     int currentSeconds;
+    BOOL timerIsOn;
 }
 
 @property (strong, nonatomic) IBOutlet UILabel *countdownLabel;
@@ -26,10 +27,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    currentMinute = 25;
-    currentSeconds = 00;
-    [self.countdownLabel setText:@"Time : 25:00"];
-    [self.startAndPauseButtonLabel setTitle:@"Play" forState:UIControlStateNormal];
+    [self resetTheTimer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -38,18 +36,30 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)resetTheTimer
+{
+    currentMinute = 25;
+    currentSeconds = 00;
+    timerIsOn = NO;
+    [self.countdownLabel setText:@"Time : 25:00"];
+    [self.startAndPauseButtonLabel setTitle:@"Play" forState:UIControlStateNormal];
+}
+
+#pragma mark - Start and pause the timer
 
 - (IBAction)startAndPauseTimer:(UIButton *)sender
 {
-    if ([self.startAndPauseButtonLabel.titleLabel.text isEqualToString:@"Play"])
+    if (timerIsOn == NO)
     {
-        [self startTimer];
         [self.startAndPauseButtonLabel setTitle:@"Pause" forState:UIControlStateNormal];
+        [self startTimer];
+        timerIsOn = YES;
     }
-    else if ([self.startAndPauseButtonLabel.titleLabel.text isEqualToString:@"Pause"])
+    else if (timerIsOn == YES)
     {
-        [self pauseTimer];
         [self.startAndPauseButtonLabel setTitle:@"Play" forState:UIControlStateNormal];
+        [self pauseTimer];
+        timerIsOn = NO;
     }
 }
 
@@ -90,6 +100,14 @@
     {
         [timer invalidate];
     }
+}
+
+# pragma mark - Stop and reset the timer
+
+- (IBAction)resetTimerAction:(UIButton *)sender
+{
+    [self pauseTimer];
+    [self resetTheTimer];
 }
 
 @end
